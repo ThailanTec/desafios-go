@@ -8,4 +8,9 @@ type Email struct {
 	Content  string
 }
 
-// Começar a codificar o repositorio
+type EmailSettings struct {
+	APIKey        string
+	APIPrivateKey string
+	SenderName    string
+	SenderEmail   string
+}
