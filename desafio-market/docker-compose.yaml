@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgresDesafio
+    volumes:
+      - ./db/01-users.sql:/docker-entrypoint-initdb.d/01-Cusers.sql
+      - ./db/02-transfers.sql:/docker-entrypoint-initdb.d/02-transfers.sql
+    environment:
+      POSTGRES_PASSWORD: "bancoseguro"
+    ports:
+      - "5432:5432"
