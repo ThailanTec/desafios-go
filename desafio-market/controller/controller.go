@@ -18,6 +18,16 @@ func GetAllUser(c *gin.Context) {
 	c.JSON(http.StatusOK, &user)
 }
 
+func GetById(c *gin.Context) {
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	var user1 = model.User{ID: id}
+	db.DB.First(&user1)
+
+	c.JSON(http.StatusOK, user1)
+}
+
 func Transfer(c *gin.Context) {
 
 	uID1, _ := strconv.Atoi(c.Param("id"))
@@ -30,50 +40,19 @@ func Transfer(c *gin.Context) {
 	var user2 = model.User{ID: uID2}
 	db.DB.First(&user2)
 
-	valorTransfer := DataTransfer(uID1, uID2, 60)
+	valorTransfer := DataTransfer(uID1, uID2, 10)
 
-	if GetSaldo(uID1) < valorTransfer || valorTransfer <= 0 {
-		c.JSON(500, "Saldo Insuficiente")
+	b, err := ValidaTransfer(uID1, valorTransfer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "Erro ao realizar transferencia")
 		return
-	} else {
-		fmt.Println(user1)
-		fmt.Println(user2)
+	} else if !b {
+		RollBack(uID1)
+	} else if b {
+		DebValor(uID1, valorTransfer)
 
-		saldo1 := GetSaldo(uID1)
-		saldo2 := GetSaldo(uID2)
-
-		result1 := saldo1 - valorTransfer
-		user1.Saldo = result1
-		db.DB.Save(user1)
-
-		result2 := saldo2 + valorTransfer
-		user2.Saldo = result2
-		db.DB.Save(user2)
-
-		fmt.Println(result1)
-		fmt.Println(result2)
+		CredValor(uID2, valorTransfer)
 	}
 
 	c.JSON(http.StatusOK, "Transferencia realizada com sucesso.")
-}
-
-func GetSaldo(id int) int {
-	var user = model.User{ID: id}
-	db.DB.First(&user)
-
-	return user.Saldo
-}
-
-func DataTransfer(debID, CredID, valorDeb int) int {
-
-	user1 := model.User{ID: debID}
-	db.DB.First(&user1)
-
-	user2 := model.User{ID: CredID}
-	db.DB.First(&user2)
-
-	valorUser1 := valorDeb
-
-	return valorUser1
-
 }

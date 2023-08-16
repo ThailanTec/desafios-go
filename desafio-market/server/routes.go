@@ -10,7 +10,7 @@ func SetupRouter() *gin.Engine {
 
 	// Routes
 	router.GET("/getAll", controller.GetAllUser)
-	router.GET("/getSaldo/:id")
+	router.GET("/getById/:id", controller.GetById)
 	router.GET("/transfer/:id/:id2", controller.Transfer)
 
 	return router
