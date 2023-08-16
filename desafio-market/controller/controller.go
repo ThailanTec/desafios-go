@@ -46,11 +46,13 @@ func Transfer(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "Erro ao realizar transferencia")
 		return
-	} else if !b {
-		RollBack(uID1)
-	} else if b {
-		DebValor(uID1, valorTransfer)
+	}
 
+	switch b {
+	case false:
+		RollBack(uID1)
+	case true:
+		DebValor(uID1, valorTransfer)
 		CredValor(uID2, valorTransfer)
 	}
 

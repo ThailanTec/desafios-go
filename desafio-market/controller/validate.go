@@ -2,7 +2,6 @@ package controller
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/ThailanTec/desafio-market/db"
@@ -30,8 +29,6 @@ func DebValor(uID1, valorTransfer int) (bool, int) {
 	user1.Saldo = result1
 	db.DB.Save(user1)
 
-	fmt.Println("VALOR FINAL", result1, valorTransfer)
-
 	return true, result1
 }
 
@@ -45,8 +42,6 @@ func CredValor(uID2, valorReceb int) (bool, int) {
 	result2 := saldo1 + valorReceb
 	user1.Saldo = result2
 	db.DB.Save(user1)
-
-	fmt.Println("VALOR FINAL", result2, valorReceb)
 
 	return true, result2
 }
